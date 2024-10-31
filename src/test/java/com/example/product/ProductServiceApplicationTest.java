@@ -2,6 +2,10 @@ package com.example.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
+import com.example.product.dto.ProductResponse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,10 +37,42 @@ class ProductServiceApplicationTest {
 		mySQLContainer.start();
 	}
 
-	/*@Test
+	@Test
 	void createProductTest() {
+		String productRequest = """
+			{
+			    "name": "iPhone 15",
+				"description": "iPhone 15 is a smartphone from Apple",
+				"price": 1000
+			}
+			""";
 		
+		String productResponse = RestAssured.given()
+			.contentType("application/json")
+			.body(productRequest)
+			.when()
+			.post("/api/products")
+			.then()
+			.log().all()
+			.statusCode(201)
+			.extract()
+			.body().asString();
 		
-	}*/
+		assertThat(productResponse).contains("Product").contains("placed successfully");
+	}
+	
+	@Test
+	void getAllProductsTest() {
+		List<ProductResponse> response = RestAssured.given()
+			.when()
+			.get("/api/products")
+			.then()
+			.log().all()
+			.statusCode(200)
+			.extract()
+			.body().as(List.class);
+		
+		assertThat(response).hasSizeGreaterThan(0);
+	}
 
 }
