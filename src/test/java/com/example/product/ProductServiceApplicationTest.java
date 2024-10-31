@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.product.dto.ProductResponse;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +48,7 @@ class ProductServiceApplicationTest {
 			}
 			""";
 		
-		String productResponse = RestAssured.given()
+		RestAssured.given()
 			.contentType("application/json")
 			.body(productRequest)
 			.when()
@@ -55,10 +56,10 @@ class ProductServiceApplicationTest {
 			.then()
 			.log().all()
 			.statusCode(201)
-			.extract()
-			.body().asString();
-		
-		assertThat(productResponse).contains("Product").contains("placed successfully");
+			.body("id", Matchers.notNullValue())
+			.body("name", Matchers.equalTo("iPhone 15"))
+			.body("description", Matchers.equalTo("iPhone 15 is a smartphone from Apple"))
+			.body("price", Matchers.equalTo(1000));
 	}
 	
 	@Test
