@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.MySQLContainer;
 
 import io.restassured.RestAssured;
@@ -39,6 +40,7 @@ class ProductServiceApplicationTest {
 	}
 
 	@Test
+	@Sql(scripts = "classpath:sql/delete_product.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	void createProductTest() {
 		String productRequest = """
 			{
@@ -63,6 +65,8 @@ class ProductServiceApplicationTest {
 	}
 	
 	@Test
+	@Sql(scripts = "classpath:sql/insert_product.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+	@Sql(scripts = "classpath:sql/delete_product.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	void getAllProductsTest() {
 		List<ProductResponse> response = RestAssured.given()
 			.when()
@@ -73,7 +77,7 @@ class ProductServiceApplicationTest {
 			.extract()
 			.body().as(List.class);
 		
-		assertThat(response).hasSizeGreaterThan(0);
+		assertThat(response).hasSize(2);
 	}
 
 }

@@ -1,0 +1,1 @@
+insert into products (name, description, price) values ('iPhone 15', 'iPhone 15 is a smartphone from Apple', 1000), ('iPhone 16', 'iPhone 16 is a smartphone from Apple', 2000);
