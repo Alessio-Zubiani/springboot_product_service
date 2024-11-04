@@ -13,5 +13,9 @@ spring:
       ddl-auto: none
 
 springdoc:
+  api-docs:
+    enabled: true 
+    path: /product/v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
+    enabled: true
+    path: /product/swagger-ui.html
